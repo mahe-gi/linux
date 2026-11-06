@@ -1,0 +1,361 @@
+import { CommandRef } from '@/types/course';
+
+export const COMMANDS_LEXICON: CommandRef[] = [
+  // File Ops
+  {
+    name: 'ls',
+    syntax: 'ls [OPTIONS] [PATH]',
+    description: 'List directory contents with details, hidden files, and human-readable sizes.',
+    commonFlags: [
+      { flag: '-l', description: 'Long listing format showing permissions, owner, size, date', example: 'ls -l /var/log' },
+      { flag: '-a', description: 'Do not ignore entries starting with . (show hidden)', example: 'ls -la ~' },
+      { flag: '-h', description: 'With -l, display human-readable sizes (K, M, G)', example: 'ls -lh' },
+      { flag: '-t', description: 'Sort by modification time, newest first', example: 'ls -lt' },
+      { flag: '-R', description: 'List subdirectories recursively', example: 'ls -R projects/' },
+    ],
+    realWorldExample: 'ls -lah /var/log/nginx',
+    category: 'file-ops',
+  },
+  {
+    name: 'cd',
+    syntax: 'cd [DIRECTORY]',
+    description: 'Change the current working directory of the shell session.',
+    commonFlags: [
+      { flag: '~', description: 'Shortcut to current user\'s home directory', example: 'cd ~' },
+      { flag: '..', description: 'Move up one parent directory', example: 'cd ..' },
+      { flag: '-', description: 'Switch back to the previous working directory', example: 'cd -' },
+    ],
+    realWorldExample: 'cd /var/www/html',
+    category: 'file-ops',
+  },
+  {
+    name: 'pwd',
+    syntax: 'pwd [OPTIONS]',
+    description: 'Print the absolute pathname of the current working directory.',
+    commonFlags: [
+      { flag: '-P', description: 'Print the physical directory without following symlinks', example: 'pwd -P' },
+    ],
+    realWorldExample: 'pwd',
+    category: 'file-ops',
+  },
+  {
+    name: 'mkdir',
+    syntax: 'mkdir [OPTIONS] DIRECTORY...',
+    description: 'Create new directories in the filesystem.',
+    commonFlags: [
+      { flag: '-p', description: 'Create parent directories as needed without error if existing', example: 'mkdir -p a/b/c' },
+      { flag: '-m', description: 'Set file mode (permissions) during creation', example: 'mkdir -m 700 secret/' },
+    ],
+    realWorldExample: 'mkdir -p /opt/app/{config,data,logs}',
+    category: 'file-ops',
+  },
+  {
+    name: 'touch',
+    syntax: 'touch [OPTIONS] FILE...',
+    description: 'Update file timestamps or create empty files if they do not exist.',
+    commonFlags: [
+      { flag: '-a', description: 'Change only access time', example: 'touch -a file.txt' },
+      { flag: '-m', description: 'Change only modification time', example: 'touch -m file.txt' },
+    ],
+    realWorldExample: 'touch .env.production',
+    category: 'file-ops',
+  },
+  {
+    name: 'cp',
+    syntax: 'cp [OPTIONS] SOURCE DEST',
+    description: 'Copy files and directory trees across storage.',
+    commonFlags: [
+      { flag: '-r, -R', description: 'Copy directories recursively', example: 'cp -r src/ dest/' },
+      { flag: '-p', description: 'Preserve mode, ownership, and timestamps', example: 'cp -p orig.txt copy.txt' },
+      { flag: '-a', description: 'Archive mode: preserve all attributes and symlinks', example: 'cp -a /etc/nginx /backup/' },
+    ],
+    realWorldExample: 'cp -rp /etc/nginx /etc/nginx.bak',
+    category: 'file-ops',
+  },
+  {
+    name: 'mv',
+    syntax: 'mv [OPTIONS] SOURCE DEST',
+    description: 'Move (rename) files or move files into directories.',
+    commonFlags: [
+      { flag: '-i', description: 'Prompt before overwriting existing destination files', example: 'mv -i a.txt b.txt' },
+      { flag: '-u', description: 'Move only when source is newer than destination file', example: 'mv -u file.txt dest/' },
+    ],
+    realWorldExample: 'mv config.sample.env .env',
+    category: 'file-ops',
+  },
+  {
+    name: 'rm',
+    syntax: 'rm [OPTIONS] FILE...',
+    description: 'Remove files or directory hierarchies.',
+    commonFlags: [
+      { flag: '-r, -R', description: 'Remove directories and their contents recursively', example: 'rm -r old_build/' },
+      { flag: '-f', description: 'Force removal without prompting and ignore non-existent files', example: 'rm -f cache.tmp' },
+      { flag: '-rf', description: 'Combined recursive force deletion (use with extreme caution!)', example: 'rm -rf node_modules/' },
+    ],
+    realWorldExample: 'rm -rf /tmp/build_cache/*',
+    category: 'file-ops',
+  },
+  {
+    name: 'cat',
+    syntax: 'cat [OPTIONS] [FILE...]',
+    description: 'Concatenate files and display their full content on standard output.',
+    commonFlags: [
+      { flag: '-n', description: 'Number all output lines starting at 1', example: 'cat -n /etc/hosts' },
+      { flag: '-b', description: 'Number only non-empty output lines', example: 'cat -b script.sh' },
+    ],
+    realWorldExample: 'cat -n /etc/resolv.conf',
+    category: 'file-ops',
+  },
+  {
+    name: 'head',
+    syntax: 'head [OPTIONS] [FILE...]',
+    description: 'Print the first 10 lines (or specified count) of files.',
+    commonFlags: [
+      { flag: '-n NUM', description: 'Print the first NUM lines instead of default 10', example: 'head -n 25 app.log' },
+    ],
+    realWorldExample: 'head -n 20 /var/log/syslog',
+    category: 'file-ops',
+  },
+  {
+    name: 'tail',
+    syntax: 'tail [OPTIONS] [FILE...]',
+    description: 'Print the last 10 lines of files, or monitor streaming appends in real time.',
+    commonFlags: [
+      { flag: '-n NUM', description: 'Output the last NUM lines', example: 'tail -n 50 error.log' },
+      { flag: '-f', description: 'Follow file as it grows; print appended data live', example: 'tail -f access.log' },
+    ],
+    realWorldExample: 'tail -n 100 -f /var/log/nginx/access.log',
+    category: 'file-ops',
+  },
+
+  // Text Processing
+  {
+    name: 'grep',
+    syntax: 'grep [OPTIONS] PATTERN [FILE...]',
+    description: 'Search for patterns and regular expressions across files and streams.',
+    commonFlags: [
+      { flag: '-i', description: 'Case-insensitive search', example: 'grep -i "error" app.log' },
+      { flag: '-v', description: 'Invert match: print non-matching lines', example: 'grep -v "^#" /etc/ssh/sshd_config' },
+      { flag: '-E', description: 'Extended regular expressions (+, ?, |, ())', example: 'grep -E "404|500" access.log' },
+      { flag: '-n', description: 'Print line numbers alongside matches', example: 'grep -n "TODO" src/*.py' },
+      { flag: '-r', description: 'Search directories recursively', example: 'grep -r "DATABASE_URL" .' },
+      { flag: '-c', description: 'Print only count of matching lines', example: 'grep -c "Failed" auth.log' },
+    ],
+    realWorldExample: 'grep -E -i "fatal|exception|error" /var/log/syslog',
+    category: 'text-processing',
+  },
+  {
+    name: 'sed',
+    syntax: 'sed [OPTIONS] [EXPRESSION] [FILE...]',
+    description: 'Stream editor for performing automated find-and-replace and text transformations.',
+    commonFlags: [
+      { flag: '-i', description: 'Modify files in-place directly on disk', example: 'sed -i "s/http/https/g" config' },
+      { flag: 's/find/repl/g', description: 'Substitute all occurrences of find with repl', example: 'sed "s/8080/443/g" app.env' },
+      { flag: '/pattern/d', description: 'Delete matching lines from stream', example: 'sed "/DEBUG/d" .env' },
+    ],
+    realWorldExample: 'sed -i "s#PORT=8080#PORT=3000#g" /app/config.env',
+    category: 'text-processing',
+  },
+  {
+    name: 'awk',
+    syntax: 'awk [OPTIONS] \'SCRIPT\' [FILE...]',
+    description: 'Pattern scanning and column-based data processing programming language.',
+    commonFlags: [
+      { flag: '-F FS', description: 'Define custom field separator character (e.g. -F:)', example: 'awk -F: \'{print $1}\' /etc/passwd' },
+      { flag: '$NF', description: 'Variable representing the final column on the line', example: 'awk \'{print $NF}\' table.txt' },
+      { flag: 'NR', description: 'Variable holding the current line number', example: 'awk \'NR > 1 {print $2}\' data.csv' },
+    ],
+    realWorldExample: 'awk \'{print $1, $4, $NF}\' /var/log/nginx/access.log',
+    category: 'text-processing',
+  },
+  {
+    name: 'sort',
+    syntax: 'sort [OPTIONS] [FILE...]',
+    description: 'Sort lines of text files numerically or alphabetically.',
+    commonFlags: [
+      { flag: '-n', description: 'Sort according to numerical string value', example: 'sort -n numbers.txt' },
+      { flag: '-r', description: 'Reverse sorting order (descending)', example: 'sort -nr counts.txt' },
+      { flag: '-u', description: 'Output unique lines only (deduplicate)', example: 'sort -u names.txt' },
+      { flag: '-k N', description: 'Sort by field/column N', example: 'sort -k 2 -n table.txt' },
+    ],
+    realWorldExample: 'sort -nr -k 1 frequency_report.txt',
+    category: 'text-processing',
+  },
+  {
+    name: 'uniq',
+    syntax: 'uniq [OPTIONS] [INPUT]',
+    description: 'Filter or count adjacent repeated lines (always sort input first!).',
+    commonFlags: [
+      { flag: '-c', description: 'Prefix lines by number of occurrences', example: 'sort list.txt | uniq -c' },
+      { flag: '-d', description: 'Only print duplicate lines', example: 'sort ips.txt | uniq -d' },
+    ],
+    realWorldExample: 'sort ip_log.txt | uniq -c | sort -nr',
+    category: 'text-processing',
+  },
+  {
+    name: 'cut',
+    syntax: 'cut [OPTIONS] [FILE...]',
+    description: 'Extract byte, character, or delimited field columns from lines.',
+    commonFlags: [
+      { flag: '-d DELIM', description: 'Use specified delimiter instead of TAB', example: 'cut -d: -f1 /etc/passwd' },
+      { flag: '-f FIELDS', description: 'Select specific field numbers', example: 'cut -d, -f1,3 data.csv' },
+    ],
+    realWorldExample: 'cut -d: -f1,6 /etc/passwd',
+    category: 'text-processing',
+  },
+
+  // SysAdmin & System
+  {
+    name: 'systemctl',
+    syntax: 'systemctl [COMMAND] [UNIT]',
+    description: 'Inspect and control systemd system and service manager.',
+    commonFlags: [
+      { flag: 'status', description: 'Check running status and recent logs of service', example: 'systemctl status nginx' },
+      { flag: 'start / stop', description: 'Activate or deactivate a service', example: 'systemctl restart postgresql' },
+      { flag: 'reload', description: 'Gracefully reload configuration without dropping connections', example: 'systemctl reload nginx' },
+      { flag: 'enable / disable', description: 'Configure service to start automatically at boot', example: 'systemctl enable docker' },
+      { flag: 'daemon-reload', description: 'Reload systemd manager after editing .service files', example: 'systemctl daemon-reload' },
+    ],
+    realWorldExample: 'systemctl reload nginx',
+    category: 'system',
+  },
+  {
+    name: 'journalctl',
+    syntax: 'journalctl [OPTIONS]',
+    description: 'Query and filter the systemd binary event journal.',
+    commonFlags: [
+      { flag: '-u UNIT', description: 'Show logs for specified service unit', example: 'journalctl -u ssh.service' },
+      { flag: '-f', description: 'Follow logs in real time (stream live)', example: 'journalctl -u nginx -f' },
+      { flag: '-n NUM', description: 'Show the last NUM log entries', example: 'journalctl -u app -n 50' },
+      { flag: '-b', description: 'Show logs from current boot session only', example: 'journalctl -b' },
+    ],
+    realWorldExample: 'journalctl -u nginx -f -n 100',
+    category: 'system',
+  },
+  {
+    name: 'ps',
+    syntax: 'ps [OPTIONS]',
+    description: 'Report a snapshot of the current processes.',
+    commonFlags: [
+      { flag: 'aux', description: 'Show all running processes with user, CPU, memory, PID', example: 'ps aux' },
+      { flag: '-ef', description: 'Standard full format listing', example: 'ps -ef | grep python' },
+    ],
+    realWorldExample: 'ps aux | grep nginx',
+    category: 'system',
+  },
+  {
+    name: 'kill',
+    syntax: 'kill [OPTIONS] PID...',
+    description: 'Send signals (SIGTERM 15, SIGKILL 9, SIGHUP 1) to process IDs.',
+    commonFlags: [
+      { flag: '-15', description: 'SIGTERM: Request graceful termination (clean exit)', example: 'kill -15 2104' },
+      { flag: '-9', description: 'SIGKILL: Force immediate uncatchable termination', example: 'kill -9 2104' },
+      { flag: '-1', description: 'SIGHUP: Signal process to reload configuration', example: 'kill -1 1205' },
+    ],
+    realWorldExample: 'kill -15 $(pgrep -f "worker.py")',
+    category: 'system',
+  },
+  {
+    name: 'df',
+    syntax: 'df [OPTIONS] [FILE...]',
+    description: 'Report filesystem disk space usage across all mounted volumes.',
+    commonFlags: [
+      { flag: '-h', description: 'Human-readable format (MB, GB)', example: 'df -h' },
+      { flag: '-i', description: 'List inode usage instead of block space', example: 'df -i' },
+      { flag: '-T', description: 'Print filesystem type (ext4, xfs, etc.)', example: 'df -hT' },
+    ],
+    realWorldExample: 'df -hT',
+    category: 'system',
+  },
+  {
+    name: 'du',
+    syntax: 'du [OPTIONS] [PATH...]',
+    description: 'Estimate file and directory space usage.',
+    commonFlags: [
+      { flag: '-s', description: 'Display only total summary for each argument', example: 'du -sh /var' },
+      { flag: '-h', description: 'Print sizes in human-readable format', example: 'du -sh *' },
+    ],
+    realWorldExample: 'du -sh /var/log/* | sort -h',
+    category: 'system',
+  },
+
+  // Networking
+  {
+    name: 'ip',
+    syntax: 'ip [OPTIONS] OBJECT [COMMAND]',
+    description: 'Show / manipulate routing, network devices, interfaces and tunnels.',
+    commonFlags: [
+      { flag: 'addr (or a)', description: 'Display all interfaces and IP addresses', example: 'ip addr show' },
+      { flag: 'route (or r)', description: 'Display the IP routing table and default gateway', example: 'ip route' },
+      { flag: 'link', description: 'Display or configure network device link states', example: 'ip link show' },
+    ],
+    realWorldExample: 'ip addr show eth0',
+    category: 'networking',
+  },
+  {
+    name: 'ss',
+    syntax: 'ss [OPTIONS]',
+    description: 'Socket statistics utility replacing legacy netstat.',
+    commonFlags: [
+      { flag: '-t', description: 'Display TCP sockets', example: 'ss -t' },
+      { flag: '-u', description: 'Display UDP sockets', example: 'ss -u' },
+      { flag: '-l', description: 'Display only listening sockets', example: 'ss -l' },
+      { flag: '-n', description: 'Do not resolve service or IP names (numeric)', example: 'ss -ln' },
+      { flag: '-p', description: 'Show process name and PID owning socket', example: 'ss -lp' },
+    ],
+    realWorldExample: 'ss -tulnp',
+    category: 'networking',
+  },
+  {
+    name: 'curl',
+    syntax: 'curl [OPTIONS] [URL...]',
+    description: 'Command line tool for transferring data with URLs (HTTP, HTTPS, API).',
+    commonFlags: [
+      { flag: '-I', description: 'Fetch HTTP headers only (HEAD request)', example: 'curl -I https://google.com' },
+      { flag: '-v', description: 'Verbose mode: display SSL handshake and request headers', example: 'curl -v https://api.com' },
+      { flag: '-s', description: 'Silent mode: suppress progress bar and errors', example: 'curl -s https://api.com' },
+      { flag: '-o FILE', description: 'Write output to file instead of stdout', example: 'curl -o app.tar.gz http://...' },
+    ],
+    realWorldExample: 'curl -Iv https://production-api.com/health',
+    category: 'networking',
+  },
+
+  // Security
+  {
+    name: 'chmod',
+    syntax: 'chmod [OPTIONS] MODE FILE...',
+    description: 'Change file access permission mode bits.',
+    commonFlags: [
+      { flag: '600', description: 'Read/write for owner only (SSH private keys, .env secrets)', example: 'chmod 600 key.pem' },
+      { flag: '644', description: 'Owner read/write, others read-only (standard configs, web files)', example: 'chmod 644 index.html' },
+      { flag: '755', description: 'Owner full, others read/execute (scripts, binaries, public dirs)', example: 'chmod 755 script.sh' },
+      { flag: '-R', description: 'Operate recursively on directories and contents', example: 'chmod -R 755 /var/www' },
+    ],
+    realWorldExample: 'chmod 600 ~/.ssh/id_ed25519',
+    category: 'security',
+  },
+  {
+    name: 'chown',
+    syntax: 'chown [OPTIONS] USER[:GROUP] FILE...',
+    description: 'Change file owner and group membership.',
+    commonFlags: [
+      { flag: '-R', description: 'Operate on files and directories recursively', example: 'chown -R www-data:www-data /var/www' },
+    ],
+    realWorldExample: 'chown -R deploy:deploy /home/deploy/app',
+    category: 'security',
+  },
+  {
+    name: 'tar',
+    syntax: 'tar [OPTIONS] ARCHIVE [SOURCE...]',
+    description: 'Tape archive tool for packaging and compressing directory structures.',
+    commonFlags: [
+      { flag: '-c', description: 'Create a new archive', example: 'tar -cf backup.tar /app' },
+      { flag: '-x', description: 'Extract files from an archive', example: 'tar -xf backup.tar' },
+      { flag: '-z', description: 'Filter archive through gzip (.tar.gz / .tgz)', example: 'tar -czf backup.tar.gz /app' },
+      { flag: '-v', description: 'Verbosely list files processed', example: 'tar -czvf backup.tar.gz /app' },
+      { flag: '-C DIR', description: 'Change to DIR before performing operations', example: 'tar -xzf app.tgz -C /opt' },
+    ],
+    realWorldExample: 'tar -czvf /backup/app_$(date +%F).tar.gz /opt/app',
+    category: 'file-ops',
+  },
+];
